@@ -1,0 +1,25 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:78193d60f0fa7189407b8f3481fb1c1b:781aedc9899da98128123112fb1209be:be64f363d3dad3c54e081f86a8e77dec$
+#
+:format=40300
+:texture=UIAssets.png
+:size=1024x1024
+:pivotpoints=enabled
+:borders=disabled
+:alphahandling=ClearTransparentPixels
+
+AddButton;0;849;161;175; 0.5;0.5; 0;0;0;0
+ButtonPill;161;849;558;175; 0.5;0.5; 0;0;0;0
+CoinIcon;647;529;238;264; 0.5;0.5; 0;0;0;0
+HeartIcon;719;793;255;231; 0.5;0.5; 0;0;0;0
+HomeIcon;623;142;370;387; 0.5;0.5; 0;0;0;0
+LockIcon;218;547;182;246; 0.5;0.5; 0;0;0;0
+MapIcon;310;152;313;377; 0.5;0.5; 0;0;0;0
+SettingsButton;0;560;218;233; 0.5;0.5; 0;0;0;0
+ShopIcon;0;166;310;363; 0.5;0.5; 0;0;0;0
+StarIcon;400;546;247;247; 0.5;0.5; 0;0;0;0
