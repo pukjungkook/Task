@@ -1,4 +1,4 @@
-# Ignore common Unity-generated folders
+# Ignore Unity-generated folders
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -9,3 +9,24 @@ UserSettings/
 MemoryCaptures/
 [Pp]ackages/com.unity.package-manager.cache/
 
+# Ignore IDE/project files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+sysinfo.txt
+
+# Allow key Unity folders
+!Assets/
+!ProjectSettings/
+!Packages/
