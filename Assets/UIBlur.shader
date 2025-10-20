@@ -1,68 +1,76 @@
-Shader "UIBlur"
+Shader "UI/BackgroundBlur"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _BlurSize ("Blur Size", Range(0, 10)) = 2
+        _BlurSize ("Blur Size", Range(6,10)) = 8
     }
 
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
-        Blend SrcAlpha OneMinusSrcAlpha
-        Cull Off
-        ZWrite Off
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+        GrabPass { "_GrabTexture" }
 
         Pass
         {
-            Name "Blur"
-            HLSLPROGRAM
+            Blend SrcAlpha OneMinusSrcAlpha
+            Cull Off ZWrite Off
+
+            CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "UnityCG.cginc"
 
-            struct Attributes
+            sampler2D _GrabTexture;
+            float4 _GrabTexture_TexelSize;
+            float _BlurSize;
+
+            struct appdata
             {
-                float4 positionOS : POSITION;
+                float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
 
-            struct Varyings
+            struct v2f
             {
-                float4 positionHCS : SV_POSITION;
-                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+                float4 uvgrab : TEXCOORD0;
             };
 
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
-
-            CBUFFER_START(UnityPerMaterial)
-                float _BlurSize;
-            CBUFFER_END
-
-            Varyings vert(Attributes IN)
+            v2f vert (appdata v)
             {
-                Varyings OUT;
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS);
-                OUT.uv = IN.uv;
-                return OUT;
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uvgrab = ComputeGrabScreenPos(o.vertex);
+                return o;
             }
 
-            float4 frag(Varyings IN) : SV_Target
+            half4 frag (v2f i) : SV_Target
             {
-                float2 uv = IN.uv;
-                float blur = _BlurSize / 1024.0; // scale for screen size
+           
+                #if defined(SHADER_API_METAL) || defined(SHADER_API_GLES)
+                    float2 uv = i.uvgrab.xy;
+                #else
+                    float2 uv = i.uvgrab.xy / i.uvgrab.w;
+                #endif
 
-                float4 col = float4(0,0,0,0);
-                col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(-blur, -blur));
-                col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(-blur,  blur));
-                col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2( blur, -blur));
-                col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2( blur,  blur));
-                col *= 0.25;
+                float2 texel = _GrabTexture_TexelSize.xy * _BlurSize;
+
+                half4 col = tex2D(_GrabTexture, uv) * 0.2;
+                col += tex2D(_GrabTexture, uv + texel * float2(1,0)) * 0.1;
+                col += tex2D(_GrabTexture, uv + texel * float2(-1,0)) * 0.1;
+                col += tex2D(_GrabTexture, uv + texel * float2(0,1)) * 0.1;
+                col += tex2D(_GrabTexture, uv + texel * float2(0,-1)) * 0.1;
+                col += tex2D(_GrabTexture, uv + texel * float2(1,1)) * 0.1;
+                col += tex2D(_GrabTexture, uv + texel * float2(-1,1)) * 0.1;
+                col += tex2D(_GrabTexture, uv + texel * float2(1,-1)) * 0.1;
+                col += tex2D(_GrabTexture, uv + texel * float2(-1,-1)) * 0.1;
 
                 return col;
             }
-            ENDHLSL
+            ENDCG
         }
     }
+
+    FallBack "UI/Default"
 }

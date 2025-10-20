@@ -53,12 +53,12 @@ public class LevelCompletedPopup : MonoBehaviour
             return;
         }
 
-        // Make sure the popup is active before playing animation
+
         popupUI.SetActive(true);
 
         if (popupAnimator != null)
         {
-            popupAnimator.Play("LevelCompleted", 0, 0f); // Play the animation clip directly
+            popupAnimator.Play("LevelCompleted", 0, 0f); 
         }
         else
         {
