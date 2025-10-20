@@ -14,7 +14,6 @@ public class LevelCompletedPopup : MonoBehaviour
 
     void Awake()
     {
-        // Try to get Animator automatically from the popupUI
         if (popupUI != null)
         {
             popupAnimator = popupUI.GetComponent<Animator>();
@@ -35,7 +34,7 @@ public class LevelCompletedPopup : MonoBehaviour
     {
         if (completeLevel && !popupShown)
         {
-            ShowPopup();
+            PlayLevelCompleteAnimation();
             popupShown = true;
         }
 
@@ -46,7 +45,7 @@ public class LevelCompletedPopup : MonoBehaviour
         }
     }
 
-    public void ShowPopup()
+    private void PlayLevelCompleteAnimation()
     {
         if (popupUI == null)
         {
@@ -54,15 +53,19 @@ public class LevelCompletedPopup : MonoBehaviour
             return;
         }
 
+        // Make sure the popup is active before playing animation
         popupUI.SetActive(true);
 
-        // Trigger LevelComplete animation if Animator exists
         if (popupAnimator != null)
         {
-            popupAnimator.SetTrigger("LevelComplete");
+            popupAnimator.Play("LevelCompleted", 0, 0f); // Play the animation clip directly
+        }
+        else
+        {
+            Debug.LogWarning("No Animator found to play LevelCompleted animation!");
         }
 
-        Debug.Log("Level Completed Popup Shown!");
+        Debug.Log("Level Completed animation played!");
     }
 
     public void HidePopup()

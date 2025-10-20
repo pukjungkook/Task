@@ -1,0 +1,11 @@
+# Ignore common Unity-generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+[Pp]ackages/com.unity.package-manager.cache/
+
